@@ -1,8 +1,5 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <errno.h>
 #include <limits.h>
 
 typedef struct s_map {
@@ -19,14 +16,24 @@ static void dispose(t_map *m) {
     m->n = 0;
 }
 static int header(char *line, t_map *m) {
-    char extra;
-    unsigned long count;
-    if (sscanf(line, "%lu %c %c %c %c", &count, &m->empty,
-               &m->obstacle, &m->full, &extra) != 4 || !count ||
-        count > INT_MAX || m->empty == m->obstacle ||
-        m->empty == m->full || m->obstacle == m->full)
-        return 0;
-    m->n = (size_t)count;
+    size_t i = 0, count = 0;
+    if (line[0] < '0' || line[0] > '9') return 0;
+    while (line[i] >= '0' && line[i] <= '9') {
+        size_t digit = (size_t)(line[i] - '0');
+        if (count > ((size_t)-1 - digit) / 10) return 0;
+        count = count * 10 + digit;
+        ++i;
+    }
+    if (!count || count > INT_MAX || line[i++] != ' ') return 0;
+    m->empty = line[i++];
+    if (line[i++] != ' ') return 0;
+    m->obstacle = line[i++];
+    if (line[i++] != ' ') return 0;
+    m->full = line[i++];
+    if (line[i] != '\\n' || line[i + 1] != 0) return 0;
+    if (m->empty == m->obstacle || m->empty == m->full ||
+        m->obstacle == m->full) return 0;
+    m->n = count;
     return 1;
 }
 static int read_map(FILE *fp, t_map *m) {
@@ -48,13 +55,16 @@ static int read_map(FILE *fp, t_map *m) {
             }
         m->rows[i] = malloc(len + 1);
         if (!m->rows[i]) { free(line); return 0; }
-        memcpy(m->rows[i], line, len + 1);
+        for (j = 0; j <= len; ++j) m->rows[i][j] = line[j];
     }
     free(line);
     /* No additional rows are permitted. */
     {
-        int ch = fgetc(fp);
-        if (ch != EOF) return 0;
+        char *extra = NULL;
+        size_t cap2 = 0;
+        ssize_t more = getline(&extra, &cap2, fp);
+        free(extra);
+        if (more != -1) return 0;
     }
     return 1;
 }
