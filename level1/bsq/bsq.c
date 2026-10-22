@@ -30,7 +30,7 @@ static int header(char *line, t_map *m) {
     m->obstacle = line[i++];
     if (line[i++] != ' ') return 0;
     m->full = line[i++];
-    if (line[i] != '\\n' || line[i + 1] != 0) return 0;
+    if (line[i] != '\n' || line[i + 1] != 0) return 0;
     if (m->empty == m->obstacle || m->empty == m->full ||
         m->obstacle == m->full) return 0;
     m->n = count;
