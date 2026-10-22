@@ -1,24 +1,14 @@
 #include "searchable_tree_bag.hpp"
-
-searchable_tree_bag::searchable_tree_bag() : tree_bag() {}
-
-searchable_tree_bag::searchable_tree_bag(const searchable_tree_bag &other)
-    : tree_bag(other) {}
-
-searchable_tree_bag &searchable_tree_bag::operator=(const searchable_tree_bag &other) {
-    if (this != &other)
-        tree_bag::operator=(other);
+searchable_tree_bag::searchable_tree_bag() {}
+searchable_tree_bag::searchable_tree_bag(const searchable_tree_bag& b) : tree_bag(b) {}
+searchable_tree_bag& searchable_tree_bag::operator=(const searchable_tree_bag& b) {
+    if (this != &b) tree_bag::operator=(b);
     return *this;
 }
-
 searchable_tree_bag::~searchable_tree_bag() {}
-
-bool searchable_tree_bag::has(int value) const {
-    const node *current = tree;
-    while (current) {
-        if (value == current->value)
-            return true;
-        current = value < current->value ? current->l : current->r;
-    }
-    return false;
+bool searchable_tree_bag::has(int n) const {
+    const node *p = tree;
+    while (p && p->value != n)
+        p = n < p->value ? p->l : p->r;
+    return p != 0;
 }

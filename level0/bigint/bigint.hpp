@@ -4,36 +4,32 @@
 #include <string>
 
 class bigint {
-    std::string digits_;
-    int compare(const bigint &other) const;
+    std::string s;
+    int cmp(const bigint& b) const;
 public:
-    bigint(unsigned long value = 0);
-    bigint(const bigint &other);
-    bigint &operator=(const bigint &other);
+    bigint(unsigned long n = 0);
+    bigint(const bigint& b);
+    bigint& operator=(const bigint& b);
     ~bigint();
-
-    const std::string &str() const;
-    bigint &operator+=(const bigint &other);
-    bigint operator+(const bigint &other) const;
-    bigint &operator++();
+    bigint& operator+=(const bigint& b);
+    bigint operator+(const bigint& b) const;
+    bigint& operator++();
     bigint operator++(int);
-
-    bigint &operator<<=(unsigned long amount);
-    bigint &operator>>=(unsigned long amount);
-    bigint &operator<<=(const bigint &amount);
-    bigint &operator>>=(const bigint &amount);
-    bigint operator<<(unsigned long amount) const;
-    bigint operator>>(unsigned long amount) const;
-    bigint operator<<(const bigint &amount) const;
-    bigint operator>>(const bigint &amount) const;
-
-    bool operator==(const bigint &other) const;
-    bool operator!=(const bigint &other) const;
-    bool operator<(const bigint &other) const;
-    bool operator<=(const bigint &other) const;
-    bool operator>(const bigint &other) const;
-    bool operator>=(const bigint &other) const;
+    bigint& operator<<=(unsigned long n);
+    bigint& operator>>=(unsigned long n);
+    bigint& operator<<=(const bigint& n);
+    bigint& operator>>=(const bigint& n);
+    bigint operator<<(unsigned long n) const;
+    bigint operator>>(unsigned long n) const;
+    bigint operator<<(const bigint& n) const;
+    bigint operator>>(const bigint& n) const;
+    bool operator==(const bigint& b) const;
+    bool operator!=(const bigint& b) const;
+    bool operator<(const bigint& b) const;
+    bool operator<=(const bigint& b) const;
+    bool operator>(const bigint& b) const;
+    bool operator>=(const bigint& b) const;
+    const std::string& str() const;
 };
-
-std::ostream &operator<<(std::ostream &out, const bigint &value);
+std::ostream& operator<<(std::ostream& o, const bigint& b);
 #endif
